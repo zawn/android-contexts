@@ -24,7 +24,7 @@ import android.os.Looper;
  * Restrictions on non-SDK interfaces<br/>
  * https://developer.android.com/distribute/best-practices/develop/restrictions-non-sdk-interfaces<br/>
  * <p>
- * Test pass：
+ * Test pass:
  * Android 10
  * Android 9
  *
