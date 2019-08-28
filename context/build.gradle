@@ -1,9 +1,11 @@
 plugins {
     id 'java'
+    id 'maven-publish'
+    id "com.jfrog.bintray"
 }
 
-group 'com.appunity'
-version '1.0-SNAPSHOT'
+group  project.publish_group_id
+version  project.publish_version
 
 sourceCompatibility = 1.8
 
@@ -21,4 +23,31 @@ dependencies {
 
     // https://mvnrepository.com/artifact/com.google.android/android
     compileOnly files(properties.getProperty("sdk.dir") + "/platforms/android-28/android.jar")
+}
+
+publishing {
+    publications {
+        MyPublication(MavenPublication) {
+            groupId = project.publish_group_id
+            artifactId = project.publish_artifact_id
+            from components.java
+        }
+    }
+}
+
+bintray {
+    user = System.getenv('BINTRAY_USER')
+    key = System.getenv('BINTRAY_KEY')
+
+    pkg {
+        repo = 'maven'
+        name = 'android-contexts'
+        userOrg = System.getenv('BINTRAY_USER')
+        licenses = ['Apache-2.0']
+        vcsUrl = 'https://github.com/zawn/android-contexts.git'
+        version {
+            name = project.publish_version
+        }
+    }
+    publications = ['MyPublication']
 }
