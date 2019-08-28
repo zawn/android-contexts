@@ -1,0 +1,22 @@
+plugins {
+    id 'java'
+}
+
+group 'com.appunity'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+
+    // https://mvnrepository.com/artifact/com.google.android/android
+    compileOnly files(properties.getProperty("sdk.dir") + "/platforms/android-28/android.jar")
+}
