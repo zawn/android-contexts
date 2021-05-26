@@ -26,6 +26,13 @@ dependencies {
 }
 
 publishing {
+    repositories {
+        maven {
+            def releasesRepoUrl = "$buildDir/repos/releases"
+            def snapshotsRepoUrl = "$buildDir/repos/snapshots"
+            url = project.hasProperty('release') ? releasesRepoUrl : snapshotsRepoUrl
+        }
+    }
     publications {
         MyPublication(MavenPublication) {
             groupId = project.publish_group_id
