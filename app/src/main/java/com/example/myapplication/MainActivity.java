@@ -8,6 +8,12 @@ import android.widget.TextView;
 
 import com.appunity.util.Contexts;
 
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.codec.binary.Hex;
+
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
+
 public class MainActivity extends Activity {
     private static final String TAG = "MainActivity";
     private static final boolean DEBUG = true;
@@ -24,6 +30,8 @@ public class MainActivity extends Activity {
         Context context = Contexts.getContext();
         Log.d(TAG, "Contexts.getContext(): " + context);
         textView.setText(context.getClass().getName());
+
+        Log.d(TAG, "onCreate2: " + HexDump.dumpHexString(getKeyAndroid().getEncoded()));
         /*Observable.just(1)
                 .subscribeOn(Schedulers.io())
                 .map(new Func1<Integer, Object>() {
@@ -102,6 +110,14 @@ public class MainActivity extends Activity {
             }
         });*/
     }
+
+    private static SecretKey getKeyAndroid() {
+        String keyString = "liFkRAy9Vqg=";
+        byte[] keyBytes = android.util.Base64.decode(keyString, android.util.Base64.DEFAULT);
+        Log.d(TAG, "getKeyAndroid: "+ HexDump.dumpHexString(keyBytes));
+        return new SecretKeySpec(keyBytes, "DES");
+    }
+
 
     private Activity getContext() {
         return this;

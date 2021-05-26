@@ -24,8 +24,17 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree("D:\\GitHub\\android-contexts\\logger\\build\\libs\\logger-mini.jar")
 
     implementation project(":context")
+//    implementation project(":logger")
+
+    implementation 'commons-codec:commons-codec:1.13'
+
+    // https://mvnrepository.com/artifact/commons-io/commons-io
+    compile group: 'commons-io', name: 'commons-io', version: '2.6'
+// https://mvnrepository.com/artifact/commons-codec/commons-codec
+    compile 'commons-codec:commons-codec:1.13'
 //    implementation project(path: ':network')
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:0.5'
