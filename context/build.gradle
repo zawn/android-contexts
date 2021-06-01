@@ -1,11 +1,15 @@
 plugins {
     id 'java'
     id 'maven-publish'
-    id "com.jfrog.bintray"
+    id "nebula.info" version "9.3.0"
 }
 
 group  project.publish_group_id
 version  project.publish_version
+
+java {
+    withSourcesJar()
+}
 
 sourceCompatibility = 1.8
 
@@ -25,14 +29,32 @@ dependencies {
     compileOnly files(properties.getProperty("sdk.dir") + "/platforms/android-28/android.jar")
 }
 
+group project.publish_group_id
+version project.publish_version
+
+def localReleaseDest = "${project.getRootDir()}/repo"
+
+def isUploadRemoteMaven() {
+    return hasProperty('publish_is_upload_remote') ? publish_is_upload_remote.toBoolean() : false
+}
 publishing {
     repositories {
         maven {
-            def releasesRepoUrl = "$buildDir/repos/releases"
-            def snapshotsRepoUrl = "$buildDir/repos/snapshots"
-            url = project.hasProperty('release') ? releasesRepoUrl : snapshotsRepoUrl
+            url = localReleaseDest
+
+            if (isUploadRemoteMaven()) {
+                credentials {
+                    username project.nexus_username
+                    password project.nexus_password
+                }
+                def releasesRepoUrl = project.release_repository_url
+                def snapshotsRepoUrl = project.snapshot_repository_url
+                url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+            }
+
         }
     }
+
     publications {
         MyPublication(MavenPublication) {
             groupId = project.publish_group_id
@@ -42,19 +64,6 @@ publishing {
     }
 }
 
-bintray {
-    user = System.getenv('BINTRAY_USER')
-    key = System.getenv('BINTRAY_KEY')
 
-    pkg {
-        repo = 'maven'
-        name = 'android-contexts'
-        userOrg = System.getenv('BINTRAY_USER')
-        licenses = ['Apache-2.0']
-        vcsUrl = 'https://github.com/zawn/android-contexts.git'
-        version {
-            name = project.publish_version
-        }
-    }
-    publications = ['MyPublication']
-}
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
